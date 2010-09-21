@@ -1,0 +1,19 @@
+This project is a game, in double meaning.
+
+The development process itself is a game, and the purpose is to produce a game.
+See Project rules.txt for more info about the process.
+
+See license.txt for the license.
+
+Building the project
+You need to get
+Allegro 4.9	http://sourceforge.net/projects/alleg/files/allegro-unstable/
+premake4	http://industriousone.com/premake/download
+
+Use premake4 to generate project files for your toolset
+premake4 <toolset>
+See http://industriousone.com/premake-quick-start
+
+Then build the project using your toolset
+
+You don't have to execute premake4 if you've only changed code within existing files.

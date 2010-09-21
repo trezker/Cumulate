@@ -1,0 +1,56 @@
+This is a project meant to develop a game with a minimum of planning and debating.
+The method to achieve this is by making the development itself a game.
+
+Developers take turns adding features to the projects.
+Each developer interested in the project signs up to take a turn.
+The maintainer* handles a queue of developers.
+
+* maintainer, game master, cat herder, the one who is responsible for keeping the game fun and fair.
+
+The turns.
+
+During your turn you add any feature you want.
+You may NOT remove or change the nature of any existing features.
+You may of course refine, or add details, to a feature.
+Exactly where the line is drawn is up to the maintainer of the project.
+
+A turn lasts at most one week. So you have 7 days to implement your feature 
+and request it be added to the main repository. If you're quicker than that 
+your turn may of course end earlier and let the next developer get his turn quicker.
+The main rule is that a turn implements a single feature. 
+What constitutes a feature might have to be ruled by the maintainer, 
+but you can't implement e.g. script support and network support in the same turn.
+
+During a turn you may refactor some code in order to make implementing
+your feature easier. As long as refactoring doesn't break old features.
+
+Communication with the maintainer is advisable if anything is unclear.
+If your contribution is too far out of alignment with the rules, the maintainer 
+may split it down to a single feature or entirely disqualify it.
+The maintainer may also grant extra time, if you have proven your ability to follow through 
+and ask nicely.
+
+Maintenance, bugs, documentation etc...
+
+The project will suffer from bugs and need refactoring.
+Therefore, it is always open for anyone to provide bugfixes and cleanup
+services at any time. No need to sign up to take a turn for menial tasks.
+
+If some kind of disruptive maintenance is called for, it may take place 
+between turns.
+
+Placeholders
+
+If you add something to the project that's meant as a placeholder, it won't
+count as a feature and may therefore be replaced in later turns.
+To be admitted as a placeholder, it must be relevant to the feature you implement 
+and marked clearly as a placeholder.
+
+About license, copyright, intelligent design.. err intellectual property
+
+All contributions to this project belongs to the project without detailed
+credit given to the authors. Credit is only given for contributing to the project as a whole.
+Though the project log shows who did what.
+
+The project with all it's contents, the "Software" is free software.
+A proper license for this purpose is included in its own file.
