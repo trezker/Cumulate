@@ -7,7 +7,7 @@ solution ("Cumulate")
 		language "C++"
 		location "build"
 		files { "src/*.cpp" }
-		links ("allegro")
+		links ( {"allegro", "allegro_image"} )
 
 		configuration "Debug"
 			defines { "DEBUG" }
