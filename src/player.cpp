@@ -2,7 +2,7 @@
 #include <iostream>
 
 Player::Player():
-    jetpack(false)
+	jetpack(false)
 {
 	image = al_load_bitmap("data/char.png");
 	x = 0;
@@ -30,12 +30,12 @@ void Player::Event(ALLEGRO_EVENT& event)
 		{
 			move_right = true;
 		}
-        if(ALLEGRO_KEY_LCTRL == event.keyboard.keycode)
-        {
-            jetpack = true;
-            jump = false;
-        }
-        else if(ALLEGRO_KEY_UP == event.keyboard.keycode)
+		if(ALLEGRO_KEY_LCTRL == event.keyboard.keycode)
+		{
+			jetpack = true;
+			jump = false;
+		}
+		else if(ALLEGRO_KEY_UP == event.keyboard.keycode)
 		{
 			jump = true;
 		}
@@ -50,10 +50,10 @@ void Player::Event(ALLEGRO_EVENT& event)
 		{
 			move_right = false;
 		}
-        if(ALLEGRO_KEY_LCTRL == event.keyboard.keycode)
-        {
-            jetpack = false;
-        }
+		if(ALLEGRO_KEY_LCTRL == event.keyboard.keycode)
+		{
+			jetpack = false;
+		}
 		if(ALLEGRO_KEY_UP == event.keyboard.keycode)
 		{
 			jump = false;
@@ -96,11 +96,11 @@ void Player::Update(float dt)
 		ys += 1000*dt;
 	}
 
-    //Thrust
-    if(jetpack)
-    {
-        ys -= 3000*dt;
-    }
+	//Thrust
+	if(jetpack)
+	{
+		ys -= 3000*dt;
+	}
 	
 	x += xs*dt;
 	y += ys*dt;
