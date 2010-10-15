@@ -33,7 +33,9 @@ int main()
 		ALLEGRO_EVENT event;
 		if (al_get_next_event(event_queue, &event))
 		{
-			if (ALLEGRO_EVENT_DISPLAY_CLOSE == event.type)
+			if (ALLEGRO_EVENT_DISPLAY_CLOSE == event.type ||
+					ALLEGRO_EVENT_KEY_DOWN == event.type &&
+					ALLEGRO_KEY_ESCAPE == event.keyboard.keycode)
 			{
 				break;
 			}
