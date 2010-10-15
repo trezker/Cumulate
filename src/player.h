@@ -15,6 +15,7 @@ private:
 	float y;
 	float xs;
 	float ys;
+    bool jetpack;
 	bool move_left;
 	bool move_right;
 	bool jump;
