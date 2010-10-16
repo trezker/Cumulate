@@ -2,14 +2,14 @@
 #include <iostream>
 
 Player::Player():
-	jetpack(false)
+	jetpack(false),
+	image(al_load_bitmap("data/char.png")),
+	x(0),
+	y(0),
+	move_left(false),
+	move_right(false),
+	jump(false)
 {
-	image = al_load_bitmap("data/char.png");
-	x = 0;
-	y = 0;
-	move_left = false;
-	move_right = false;
-	jump = false;
 }
 
 void Player::Set_position(float ix, float iy)
