@@ -1,21 +1,42 @@
 #include "player.h"
 #include <iostream>
+#include "render_box2d.h"
 
 Player::Player():
 	jetpack(false),
 	image(al_load_bitmap("data/char.png")),
-	x(0),
-	y(0),
 	move_left(false),
 	move_right(false),
-	jump(false)
+	jump(false),
+	body(NULL)
 {
 }
 
-void Player::Set_position(float ix, float iy)
+void Player::Create_body(b2World* world)
 {
-	x = ix;
-	y = iy - al_get_bitmap_height(image);
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.fixedRotation = true;
+	bodyDef.position.Set(0.0f, -4.0f);
+	body = world->CreateBody(&bodyDef);
+	b2CircleShape shape;
+	shape.m_radius = 1.2;
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &shape;
+	fixtureDef.density = 20.0f;
+	fixtureDef.friction = 1.0f;
+	fixtureDef.restitution = 0.1f;
+	body->CreateFixture(&fixtureDef);
+}
+
+void Player::Set_position(float x, float y)
+{
+	body->SetTransform(b2Vec2(x, y), 0);
+}
+
+b2Vec2 Player::Get_position()
+{
+	return body->GetPosition();
 }
 
 void Player::Event(ALLEGRO_EVENT& event)
@@ -59,61 +80,66 @@ void Player::Event(ALLEGRO_EVENT& event)
 			jump = false;
 		}
 	}
+	if(move_left || move_right)
+		body->SetFixedRotation(false);
+	else
+	{
+		body->SetAngularVelocity(0);
+		body->SetFixedRotation(true);
+	}
 }
 
 void Player::Update(float dt)
 {
-	//Accellerating
-	float max_speed = 100;
+	float max_speed = 10;
+	b2Vec2 v = body->GetLinearVelocity();
+
 	if(move_left)
 	{
-		float mdiff = max_speed + xs;
-		xs -= mdiff*10*dt;
+		float mdiff = max_speed + v.x;
+		v.x -= mdiff*10*dt;
 	}
 	if(move_right)
 	{
-		float mdiff = max_speed - xs;
-		xs += mdiff*10*dt;
+		float mdiff = max_speed - v.x;
+		v.x += mdiff*10*dt;
 	}
-	
+	b2ContactEdge* contactedge = body->GetContactList();
+	b2Vec2 contact_normal(0, 0);
+	int contacts = 0;
+	bool touching_ground = false;
+	while(contactedge)
+	{
+		if(contactedge->contact->IsTouching() && contactedge->contact->IsEnabled())
+		{
+			touching_ground = true;
+			contact_normal += contactedge->contact->GetManifold()->localNormal;
+			contacts ++;
+		}
+		contactedge = contactedge->next;
+	}
+	contact_normal.x = contact_normal.x/contacts;
+	contact_normal.y = contact_normal.y/contacts;
+
 	//Jumping
-	bool touching_ground = y>=600-al_get_bitmap_height(image); //Placeholder
 	if(jump && touching_ground)
 	{
 		jump = false;
-		ys -= 250;
-	}
-
-	//Stopping
-	if(!(move_right || move_left))
-	{
-		xs -= 10*xs*dt;
-	}
-	
-	//Gravity
-	if(!touching_ground)
-	{
-		ys += 1000*dt;
+		v += 15*contact_normal;
 	}
 
 	//Thrust
 	if(jetpack)
 	{
-		ys -= 3000*dt;
+		v.y -= 180*dt;
 	}
-	
-	x += xs*dt;
-	y += ys*dt;
 
-	touching_ground = y>=600-al_get_bitmap_height(image); //Placeholder
-	if(touching_ground)
-	{
-		ys = 0;
-		y = 600 - al_get_bitmap_height(image);
-	}
+	body->SetLinearVelocity(v);
 }
 
-void Player::Draw()
+void Player::Draw(b2Vec2 camera)
 {
-	al_draw_bitmap(image, x, y, 0);
+	b2Vec2 p = 10*body->GetPosition()-camera;
+	al_draw_bitmap(image, p.x-al_get_bitmap_width(image)/2, p.y-al_get_bitmap_height(image)/2, 0);
+	Draw_body(body, camera);
 }
