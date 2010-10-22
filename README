@@ -8,6 +8,7 @@ See license.txt for the license.
 Building the project
 You need to get
 Allegro 4.9	http://sourceforge.net/projects/alleg/files/allegro-unstable/
+Box2D		http://code.google.com/p/box2d/
 premake4	http://industriousone.com/premake/download
 
 Use premake4 to generate project files for your toolset
