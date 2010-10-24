@@ -3,8 +3,36 @@
 #include "player.h"
 #include "platform.h"
 #include "contactlistener.h"
+#include <sinxml/sinxml.h>
 
-int main()
+typedef std::vector<Platform*> Platforms;
+
+void Load(const char* filename, Platforms* platforms)
+{
+	for(Platforms::iterator i = platforms->begin(); i!=platforms->end(); ++i)
+	{
+		delete *i;
+	}
+	platforms->clear();
+	
+	sinxml::Document doc("1.0");
+	doc.Load_file(filename);
+	sinxml::Children& mapchildren = doc.Get_root()->Get_children();
+	for(sinxml::Children::iterator i = mapchildren.begin(); i != mapchildren.end(); ++i)
+	{
+		Platform* platform = new Platform;
+		sinxml::Children& platformchildren = (*i)->Get_children();
+		for(sinxml::Children::iterator j = platformchildren.begin(); j != platformchildren.end(); ++j)
+		{
+			float x = sinxml::fromstring<float>((*j)->Get_child("x")->Get_value());
+			float y = sinxml::fromstring<float>((*j)->Get_child("y")->Get_value());
+			platform->Add_collision_vertex(b2Vec2(x, y));
+		}
+		platforms->push_back(platform);
+	}
+}
+
+int main(int argc, const char* argv[])
 {	
 	al_init();
 
@@ -26,20 +54,20 @@ int main()
 	Player player;
 	player.Create_body(&world);
 
-	Platform platform;
-	platform.Add_collision_vertex(b2Vec2(-130, -40));
-	platform.Add_collision_vertex(b2Vec2(-110, -20));
-	platform.Add_collision_vertex(b2Vec2(-90, -40));
-	platform.Add_collision_vertex(b2Vec2(-70, -20));
-	platform.Add_collision_vertex(b2Vec2(-30, -20));
-	platform.Add_collision_vertex(b2Vec2(30, -20));
-	platform.Add_collision_vertex(b2Vec2(50, -30));
-	platform.Add_collision_vertex(b2Vec2(70, -50));
-	platform.Add_collision_vertex(b2Vec2(90, -80));
-	platform.Add_collision_vertex(b2Vec2(110, -120));
-	platform.Add_collision_vertex(b2Vec2(130, -170));
-	platform.Create_body(world);
-
+	Platforms platforms;
+	if(argc==2)
+	{
+		Load(argv[1], &platforms);
+		for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
+			(*i)->Create_body(world);
+	}
+	else
+	{
+		Load("data/test.map", &platforms);
+		for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
+			(*i)->Create_body(world);
+	}
+	
 	ContactListener cl;
 	world.SetContactListener(&cl);
 
@@ -84,7 +112,9 @@ int main()
 		}
 
 
-		platform.Draw(camera);
+		for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
+			(*i)->Draw(camera);
+//		platform.Draw(camera);
 		player.Draw(camera);
 		al_flip_display();
 		al_clear_to_color(al_map_rgb(0, 0, 0));
