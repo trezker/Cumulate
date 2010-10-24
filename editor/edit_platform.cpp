@@ -1,5 +1,6 @@
 #include "edit_platform.h"
 #include <allegro5/allegro_primitives.h>
+#include <algorithm>
 
 Edit_platform::Edit_platform(Platforms& iplatforms, Vector2& icamera, ALLEGRO_FONT* ifont)
 :platforms(&iplatforms),
@@ -71,6 +72,31 @@ void Edit_platform::Event(ALLEGRO_EVENT& event)
 					platform = *i;
 					nearest = p;
 					n = (p-mouse).Length_squared();
+				}
+			}
+		}
+	}
+	if(event.type == ALLEGRO_EVENT_KEY_DOWN)
+	{
+		if(platform)
+		{
+			if(event.keyboard.keycode == ALLEGRO_KEY_INSERT)
+				platform->Insert_collision_vertex(mouse);
+			if(event.keyboard.keycode == ALLEGRO_KEY_DELETE)
+			{
+				if(event.keyboard.modifiers & ALLEGRO_KEYMOD_SHIFT)
+				{
+					platforms->erase(std::find(platforms->begin(), platforms->end(), platform));
+					platform = NULL;
+				}
+				else
+				{
+					platform->Remove_collision_vertex(mouse);
+					if(platform->Get_vertices().size()<2)
+					{
+						platforms->erase(std::find(platforms->begin(), platforms->end(), platform));
+						platform = NULL;
+					}
 				}
 			}
 		}

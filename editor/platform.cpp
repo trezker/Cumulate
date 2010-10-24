@@ -49,6 +49,23 @@ void Platform::Add_collision_vertex(Vector2 v)
 
 void Platform::Insert_collision_vertex(Vector2 v)
 {
+	int n = Nearest_vertex(v);
+	if(n == 0)
+	{
+		collision_vertices.insert(collision_vertices.begin()+1, v);
+		return;
+	}
+	if(n == collision_vertices.size()-1)
+	{
+		collision_vertices.insert(collision_vertices.begin()+n, v);
+		return;
+	}
+	Vector2 db = v-collision_vertices[n-1];
+	Vector2 da = v-collision_vertices[n+1];
+	if(db.Length_squared() < da.Length_squared())
+		collision_vertices.insert(collision_vertices.begin()+n, v);
+	else
+		collision_vertices.insert(collision_vertices.begin()+(n+1), v);
 }
 
 void Platform::Move_collision_vertex(Vector2 v)
@@ -58,6 +75,7 @@ void Platform::Move_collision_vertex(Vector2 v)
 
 void Platform::Remove_collision_vertex(Vector2 v)
 {
+	collision_vertices.erase(collision_vertices.begin()+Nearest_vertex(v));
 }
 
 void Platform::Set_collision_loop(bool loop)
