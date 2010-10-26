@@ -15,6 +15,7 @@
 #include "edit_platform.h"
 #include "file.h"
 #include <iostream>
+#include <allegro5/allegro_primitives.h>
 
 int main(int argc, const char* argv[])
 {
@@ -63,6 +64,16 @@ int main(int argc, const char* argv[])
 			{
 				break;
 			}
+			if(ALLEGRO_EVENT_MOUSE_AXES)
+			{
+				ALLEGRO_MOUSE_STATE mstate;
+				al_get_mouse_state(&mstate);
+				if(al_mouse_button_down(&mstate, 3))
+				{
+					camera.x -= event.mouse.dx;
+					camera.y -= event.mouse.dy;
+				}
+			}
 			menu.Event(event);
 		}
 
@@ -70,6 +81,9 @@ int main(int argc, const char* argv[])
 		{
 			(*i)->Draw(camera, al_map_rgb_f(0, 1, 0));
 		}
+		
+		al_draw_line(0, -camera.y, 800, -camera.y, al_map_rgba_f(0, 1, 0, 0.5), 0);
+		al_draw_line(-camera.x, 0, -camera.x, 600, al_map_rgba_f(0, 0, 1, 0.5), 0);
 		
 		menu.Draw();
 
