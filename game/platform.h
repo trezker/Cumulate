@@ -4,7 +4,7 @@
 #include <deque>
 #include <allegro5/allegro5.h>
 #include "physic.h"
-
+#include "vector2.h"
 
 class PhysicPlatform: public Physic
 {
@@ -29,6 +29,7 @@ public:
 
 	//Collision shape editing
 	void Add_collision_vertex(b2Vec2 v);
+	void Add_collision_vertex(Vector2 v);
 	//Insert a vertex between the two closest existing vertices
 	void Insert_collision_vertex(b2Vec2 v);
 	//Move closest vertex to the given point

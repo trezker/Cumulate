@@ -2,33 +2,66 @@
 #include <allegro5/allegro_image.h>
 #include "player.h"
 #include "platform.h"
+#include "bitmap.h"
+#include "sprite.h"
 #include "contactlistener.h"
 #include <sinxml/sinxml.h>
+#include <map>
 
 typedef std::vector<Platform*> Platforms;
 
-void Load(const char* filename, Platforms* platforms)
+void Load(const char* filename, Platforms* platforms, Bitmaps* bitmaps, Sprites* sprites)
 {
 	for(Platforms::iterator i = platforms->begin(); i!=platforms->end(); ++i)
 	{
 		delete *i;
 	}
 	platforms->clear();
+	bitmaps->clear();
+	sprites->clear();
 	
+	typedef std::map<int, Bitmap*> Idbmpmap;
+	Idbmpmap idbmpmap;
+
 	sinxml::Document doc("1.0");
-	doc.Load_file(filename);
+	if(!doc.Load_file(filename))
+		return;
 	sinxml::Children& mapchildren = doc.Get_root()->Get_children();
 	for(sinxml::Children::iterator i = mapchildren.begin(); i != mapchildren.end(); ++i)
 	{
-		Platform* platform = new Platform;
-		sinxml::Children& platformchildren = (*i)->Get_children();
-		for(sinxml::Children::iterator j = platformchildren.begin(); j != platformchildren.end(); ++j)
+		if((*i)->Get_name() == "platform")
 		{
-			float x = sinxml::fromstring<float>((*j)->Get_child("x")->Get_value());
-			float y = sinxml::fromstring<float>((*j)->Get_child("y")->Get_value());
-			platform->Add_collision_vertex(b2Vec2(x, y));
+			Platform* platform = new Platform;
+			sinxml::Children& platformchildren = (*i)->Get_children();
+			for(sinxml::Children::iterator j = platformchildren.begin(); j != platformchildren.end(); ++j)
+			{
+				float x = sinxml::fromstring<float>((*j)->Get_child("x")->Get_value());
+				float y = sinxml::fromstring<float>((*j)->Get_child("y")->Get_value());
+				platform->Add_collision_vertex(Vector2(x, y));
+			}
+			platforms->push_back(platform);
 		}
-		platforms->push_back(platform);
+		if((*i)->Get_name() == "bitmap")
+		{
+			std::string filename = (*i)->Get_child("filename")->Get_value();
+			int id = sinxml::fromstring<int>((*i)->Get_child("id")->Get_value());
+			
+			Bitmap* bitmap = new Bitmap(filename);
+			bitmaps->push_back(bitmap);
+			idbmpmap[id] = bitmap;
+		}
+	}
+	for(sinxml::Children::iterator i = mapchildren.begin(); i != mapchildren.end(); ++i)
+	{
+		if((*i)->Get_name() == "sprite")
+		{
+			int id = sinxml::fromstring<int>((*i)->Get_child("id")->Get_value());
+			float x = sinxml::fromstring<float>((*i)->Get_child("x")->Get_value());
+			float y = sinxml::fromstring<float>((*i)->Get_child("y")->Get_value());
+			Sprite* sprite = new Sprite(idbmpmap[id]);
+			sprite->Set_position(Vector2(x, y));
+			sprites->push_back(sprite);
+		}
 	}
 }
 
@@ -55,15 +88,17 @@ int main(int argc, const char* argv[])
 	player.Create_body(&world);
 
 	Platforms platforms;
+	Bitmaps bitmaps;
+	Sprites sprites;
 	if(argc==2)
 	{
-		Load(argv[1], &platforms);
+		Load(argv[1], &platforms, &bitmaps, &sprites);
 		for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
 			(*i)->Create_body(world);
 	}
 	else
 	{
-		Load("data/test.map", &platforms);
+		Load("data/test.map", &platforms, &bitmaps, &sprites);
 		for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
 			(*i)->Create_body(world);
 	}
@@ -112,6 +147,8 @@ int main(int argc, const char* argv[])
 		}
 
 
+		for(Sprites::iterator i = sprites.begin(); i != sprites.end(); ++i)
+			(*i)->Draw(Vector2(camera.x, camera.y));
 		for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
 			(*i)->Draw(camera);
 //		platform.Draw(camera);

@@ -3,119 +3,189 @@
  <platform>
   <vertex>
    <x>
-    -167
+    -157
    </x>
    <y>
-    55
+    9
    </y>
   </vertex>
   <vertex>
    <x>
-    -69
+    -108
    </x>
    <y>
-    79
+    10
    </y>
   </vertex>
   <vertex>
    <x>
-    63
+    -23
    </x>
    <y>
-    76
+    -39
    </y>
   </vertex>
   <vertex>
    <x>
-    153
+    25
    </x>
    <y>
-    31
-   </y>
-  </vertex>
-  <vertex>
-   <x>
-    240
-   </x>
-   <y>
-    -82
-   </y>
-  </vertex>
-  <vertex>
-   <x>
-    241
-   </x>
-   <y>
-    -158
+    -38
    </y>
   </vertex>
  </platform>
  <platform>
   <vertex>
    <x>
-    -137
+    -115
    </x>
    <y>
-    31
+    -14
    </y>
   </vertex>
   <vertex>
    <x>
-    -78
+    -66
    </x>
    <y>
-    15
+    -15
    </y>
   </vertex>
   <vertex>
    <x>
-    5
+    -23
    </x>
    <y>
-    15
+    10
    </y>
   </vertex>
   <vertex>
    <x>
-    72
+    21
    </x>
    <y>
-    38
+    10
+   </y>
+  </vertex>
+  <vertex>
+   <x>
+    64
+   </x>
+   <y>
+    -14
    </y>
   </vertex>
  </platform>
- <platform>
-  <vertex>
-   <x>
-    150
-   </x>
-   <y>
-    -143
-   </y>
-  </vertex>
-  <vertex>
-   <x>
-    96
-   </x>
-   <y>
-    -91
-   </y>
-  </vertex>
-  <vertex>
-   <x>
-    54
-   </x>
-   <y>
-    -116
-   </y>
-  </vertex>
-  <vertex>
-   <x>
-    -36
-   </x>
-   <y>
-    -112
-   </y>
-  </vertex>
- </platform>
+ <bitmap>
+  <filename>
+   data/platform.png
+  </filename>
+  <id>
+   0
+  </id>
+ </bitmap>
+ <bitmap>
+  <filename>
+   data/platform_slope30.png
+  </filename>
+  <id>
+   1
+  </id>
+ </bitmap>
+ <bitmap>
+  <filename>
+   data/platform_slope-30.png
+  </filename>
+  <id>
+   2
+  </id>
+ </bitmap>
+ <sprite>
+  <id>
+   0
+  </id>
+  <x>
+   -26
+  </x>
+  <y>
+   10
+  </y>
+ </sprite>
+ <sprite>
+  <id>
+   1
+  </id>
+  <x>
+   -69
+  </x>
+  <y>
+   -15
+  </y>
+ </sprite>
+ <sprite>
+  <id>
+   2
+  </id>
+  <x>
+   21
+  </x>
+  <y>
+   -16
+  </y>
+ </sprite>
+ <sprite>
+  <id>
+   2
+  </id>
+  <x>
+   -110
+  </x>
+  <y>
+   -16
+  </y>
+ </sprite>
+ <sprite>
+  <id>
+   0
+  </id>
+  <x>
+   -157
+  </x>
+  <y>
+   9
+  </y>
+ </sprite>
+ <sprite>
+  <id>
+   0
+  </id>
+  <x>
+   -115
+  </x>
+  <y>
+   -14
+  </y>
+ </sprite>
+ <sprite>
+  <id>
+   2
+  </id>
+  <x>
+   -68
+  </x>
+  <y>
+   -40
+  </y>
+ </sprite>
+ <sprite>
+  <id>
+   0
+  </id>
+  <x>
+   -25
+  </x>
+  <y>
+   -39
+  </y>
+ </sprite>
 </map>

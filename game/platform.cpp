@@ -51,6 +51,11 @@ void Platform::Add_collision_vertex(b2Vec2 v)
 	position.y = position.y/collision_vertices.size();
 }
 
+void Platform::Add_collision_vertex(Vector2 v)
+{
+	Add_collision_vertex(b2Vec2(v.x, v.y));
+}
+
 void Platform::Insert_collision_vertex(b2Vec2 v)
 {
 }

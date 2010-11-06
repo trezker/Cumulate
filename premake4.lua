@@ -2,12 +2,28 @@
 solution ("Cumulate")
 	configurations { "Debug", "Release" }
 
+	project ("common")
+		kind "StaticLib"
+		language "C++"
+		location "build"
+		files { "common/*.cpp" }
+		targetdir "build/lib"
+
+		configuration "Debug"
+			defines { "DEBUG" }
+			flags { "Symbols" }
+ 
+		configuration "Release"
+			defines { "NDEBUG" }
+			flags { "Optimize" }
+
 	project ("Cumulate")
 		kind "ConsoleApp"
 		language "C++"
 		location "build"
-		files { "src/*.cpp" }
-		links ( {"allegro", "allegro_image", "allegro_primitives", "Box2D", "sinxml"} )
+		files { "game/*.cpp" }
+		links ( {"allegro", "allegro_image", "allegro_primitives", "Box2D", "sinxml", "common"} )
+		includedirs { "common" }
 
 		configuration "Debug"
 			defines { "DEBUG" }
@@ -22,7 +38,8 @@ solution ("Cumulate")
 		language "C++"
 		location "build/editor"
 		files { "editor/*.cpp" }
-		links ( {"allegro", "allegro_image", "allegro_primitives", "allegro_font", "allegro_ttf", "allegro_dialog", "sinxml"} )
+		links ( {"allegro", "allegro_image", "allegro_primitives", "allegro_font", "allegro_ttf", "allegro_dialog", "sinxml", "common"} )
+		includedirs { "common" }
 
 		configuration "Debug"
 			defines { "DEBUG" }

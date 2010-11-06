@@ -3,9 +3,12 @@
 #include <allegro5/allegro_native_dialog.h>
 #include <iostream>
 #include <sinxml/sinxml.h>
+#include <map>
 
-File::File(Platforms& iplatforms, ALLEGRO_FONT* ifont)
-:platforms(&iplatforms),
+File::File(ALLEGRO_FONT* ifont)
+:platforms(NULL),
+bitmaps(NULL),
+sprites(NULL),
 font(ifont),
 open(false)
 {
@@ -58,6 +61,8 @@ void File::Event(ALLEGRO_EVENT& event)
 			sinxml::Document doc("1.0");
 			sinxml::Element* map = new sinxml::Element("map");
 			doc.Set_root(map);
+			
+			//Platforms
 			for(Platforms::iterator i = platforms->begin(); i != platforms->end(); ++i)
 			{
 				sinxml::Element* platform = new sinxml::Element("platform");
@@ -71,6 +76,36 @@ void File::Event(ALLEGRO_EVENT& event)
 					vertex->Add_child(new sinxml::Element("y", sinxml::tostring(i->y)));
 				}
 			}
+			
+			//Bitmaps
+			typedef std::map<Bitmap*, int> Bmpmap;
+			Bmpmap bmpmap;
+			int id = 0;
+			for(Bitmaps::iterator i = bitmaps->begin(); i!= bitmaps->end(); ++i)
+			{
+				sinxml::Element* bitmap = new sinxml::Element("bitmap");
+				map->Add_child(bitmap);
+				sinxml::Element* filename = new sinxml::Element("filename", (*i)->Get_filename());
+				bitmap->Add_child(filename);
+				sinxml::Element* eid = new sinxml::Element("id", sinxml::tostring(id));
+				bitmap->Add_child(eid);
+				bmpmap[*i] = id;
+				++id;
+			}
+
+			for(Sprites::iterator i = sprites->begin(); i != sprites->end(); ++i)
+			{
+				sinxml::Element* sprite = new sinxml::Element("sprite");
+				map->Add_child(sprite);
+				sinxml::Element* id = new sinxml::Element("id", sinxml::tostring(bmpmap[(*i)->Get_bitmap()]));
+				sprite->Add_child(id);
+				Vector2 p = (*i)->Get_position();
+				sinxml::Element* x = new sinxml::Element("x", sinxml::tostring(p.x));
+				sprite->Add_child(x);
+				sinxml::Element* y = new sinxml::Element("y", sinxml::tostring(p.y));
+				sprite->Add_child(y);
+			}
+
 			doc.Save_file(al_cstr(inputbox.Get_text()));
 		}
 	}
@@ -94,22 +129,51 @@ void File::Load(const char* filename)
 		delete *i;
 	}
 	platforms->clear();
-	
+	bitmaps->clear();
+	sprites->clear();
+
+	typedef std::map<int, Bitmap*> Idbmpmap;
+	Idbmpmap idbmpmap;
+
 	sinxml::Document doc("1.0");
 	if(!doc.Load_file(filename))
 		return;
 	sinxml::Children& mapchildren = doc.Get_root()->Get_children();
 	for(sinxml::Children::iterator i = mapchildren.begin(); i != mapchildren.end(); ++i)
 	{
-		Platform* platform = new Platform;
-		sinxml::Children& platformchildren = (*i)->Get_children();
-		for(sinxml::Children::iterator j = platformchildren.begin(); j != platformchildren.end(); ++j)
+		if((*i)->Get_name() == "platform")
 		{
-			float x = sinxml::fromstring<float>((*j)->Get_child("x")->Get_value());
-			float y = sinxml::fromstring<float>((*j)->Get_child("y")->Get_value());
-			platform->Add_collision_vertex(Vector2(x, y));
+			Platform* platform = new Platform;
+			sinxml::Children& platformchildren = (*i)->Get_children();
+			for(sinxml::Children::iterator j = platformchildren.begin(); j != platformchildren.end(); ++j)
+			{
+				float x = sinxml::fromstring<float>((*j)->Get_child("x")->Get_value());
+				float y = sinxml::fromstring<float>((*j)->Get_child("y")->Get_value());
+				platform->Add_collision_vertex(Vector2(x, y));
+			}
+			platforms->push_back(platform);
 		}
-		platforms->push_back(platform);
+		if((*i)->Get_name() == "bitmap")
+		{
+			std::string filename = (*i)->Get_child("filename")->Get_value();
+			int id = sinxml::fromstring<int>((*i)->Get_child("id")->Get_value());
+			
+			Bitmap* bitmap = new Bitmap(filename);
+			bitmaps->push_back(bitmap);
+			idbmpmap[id] = bitmap;
+		}
+	}
+	for(sinxml::Children::iterator i = mapchildren.begin(); i != mapchildren.end(); ++i)
+	{
+		if((*i)->Get_name() == "sprite")
+		{
+			int id = sinxml::fromstring<int>((*i)->Get_child("id")->Get_value());
+			float x = sinxml::fromstring<float>((*i)->Get_child("x")->Get_value());
+			float y = sinxml::fromstring<float>((*i)->Get_child("y")->Get_value());
+			Sprite* sprite = new Sprite(idbmpmap[id]);
+			sprite->Set_position(Vector2(x, y));
+			sprites->push_back(sprite);
+		}
 	}
 }
 
