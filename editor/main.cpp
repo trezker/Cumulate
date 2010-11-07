@@ -15,6 +15,7 @@
 #include "edit_platform.h"
 #include "file.h"
 #include "create_sprite.h"
+#include "edit_sprite.h"
 #include <iostream>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
@@ -57,6 +58,7 @@ int main(int argc, const char* argv[])
 	menu.Add_entry(new Edit_platform(platforms, camera, font));
 	menu.Add_entry(file);
 	menu.Add_entry(new Create_sprite(bitmaps, sprites, camera, font));
+	menu.Add_entry(new Edit_sprite(sprites, camera, font));
 
 	if(argc==2)
 		file->Load(argv[1]);

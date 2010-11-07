@@ -11,7 +11,7 @@ Create_sprite::Create_sprite(Bitmaps& ibitmaps, Sprites& isprites, Vector2& icam
 ,selected(0)
 ,open(false)
 {
-	w = al_get_text_width(font, "Create image") + 4;
+	w = al_get_text_width(font, "Create sprite") + 4;
 	h = al_get_font_line_height(font) + 4;
 	inputbox.Set_font(font);
 	inputbox.Set_text("filename");
@@ -36,7 +36,7 @@ void Create_sprite::Draw()
 	ALLEGRO_COLOR color = al_map_rgb_f(1, 1, 1);
 	ALLEGRO_COLOR back_color = al_map_rgb_f(1, .9, .9);
 	al_draw_rectangle(x, y, x+w, y+h, back_color, 0);
-	al_draw_text(font, color, x+w/2, y+2, ALLEGRO_ALIGN_CENTRE, "Create image");
+	al_draw_text(font, color, x+w/2, y+2, ALLEGRO_ALIGN_CENTRE, "Create sprite");
 
 	if(open)
 	{
