@@ -7,6 +7,7 @@
 #include "contactlistener.h"
 #include <sinxml/sinxml.h>
 #include <map>
+#include "render_box2d.h"
 
 typedef std::vector<Platform*> Platforms;
 
@@ -111,6 +112,8 @@ int main(int argc, const char* argv[])
 	
 	b2Vec2 camera(0.0f, 0.0f);
 
+	bool show_bodies = false;
+
 	float last_update = al_current_time();
 	float dt;
 
@@ -128,6 +131,11 @@ int main(int argc, const char* argv[])
 					ALLEGRO_KEY_ESCAPE == event.keyboard.keycode)
 			{
 				break;
+			}
+			if (ALLEGRO_EVENT_KEY_DOWN == event.type &&
+					ALLEGRO_KEY_F9 == event.keyboard.keycode)
+			{
+				show_bodies = !show_bodies;
 			}
 			player.Event(event);
 		}
@@ -149,10 +157,17 @@ int main(int argc, const char* argv[])
 
 		for(Sprites::iterator i = sprites.begin(); i != sprites.end(); ++i)
 			(*i)->Draw(Vector2(camera.x, camera.y));
-		for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
-			(*i)->Draw(camera);
-//		platform.Draw(camera);
+
 		player.Draw(camera);
+
+		if(show_bodies)
+		{
+			for(b2Body* body = world.GetBodyList(); body; body = body->GetNext())
+			{
+				Draw_body(body, camera);
+			}
+		}
+
 		al_flip_display();
 		al_clear_to_color(al_map_rgb(0, 0, 0));
 

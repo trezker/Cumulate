@@ -1,6 +1,5 @@
 #include "player.h"
 #include <iostream>
-#include "render_box2d.h"
 
 Player::Player():
 	jetpack(false),
@@ -141,5 +140,4 @@ void Player::Draw(b2Vec2 camera)
 {
 	b2Vec2 p = 10*body->GetPosition()-camera;
 	al_draw_bitmap(image, p.x-al_get_bitmap_width(image)/2, p.y-al_get_bitmap_height(image)/2, 0);
-	Draw_body(body, camera);
 }
