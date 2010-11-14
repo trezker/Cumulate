@@ -22,7 +22,7 @@ solution ("Cumulate")
 		language "C++"
 		location "build"
 		files { "game/*.cpp" }
-		links ( {"allegro", "allegro_image", "allegro_primitives", "Box2D", "sinxml", "common"} )
+		links ( {"allegro", "allegro_image", "allegro_primitives", "allegro_font", "allegro_ttf", "Box2D", "sinxml", "common", "lua5.1" } )
 		includedirs { "common" }
 
 		configuration "Debug"

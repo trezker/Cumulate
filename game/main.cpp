@@ -1,5 +1,8 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_primitives.h>
 #include "player.h"
 #include "platform.h"
 #include "bitmap.h"
@@ -8,6 +11,15 @@
 #include <sinxml/sinxml.h>
 #include <map>
 #include "render_box2d.h"
+#include "script_manager.h"
+
+/*
+ * Scripts
+ * When an object wants to use a scripted object, 
+ * set a flag on that object and which object wants to use it.
+ * It will then act on that flag next update.
+ * A flag like this is a one time thing, 
+ * */
 
 typedef std::vector<Platform*> Platforms;
 
@@ -71,6 +83,8 @@ int main(int argc, const char* argv[])
 	al_init();
 
 	al_init_image_addon();
+	al_init_font_addon();
+	al_init_ttf_addon();
 
 	ALLEGRO_DISPLAY *display;
 	al_set_new_display_flags(ALLEGRO_WINDOWED);
@@ -81,6 +95,8 @@ int main(int argc, const char* argv[])
 	ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
 	al_register_event_source(event_queue, (ALLEGRO_EVENT_SOURCE *)display);
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
+
+	Script_manager script_manager;
 
 	b2Vec2 gravity(0.0f, 40.0f);
 	b2World world(gravity, true);
@@ -113,6 +129,10 @@ int main(int argc, const char* argv[])
 	b2Vec2 camera(0.0f, 0.0f);
 
 	bool show_bodies = false;
+	bool show_console = false;
+	ALLEGRO_FONT* font = al_load_ttf_font("data/times.ttf", 12, 0);
+	ALLEGRO_USTR* console_input = al_ustr_new("");
+
 
 	float last_update = al_current_time();
 	float dt;
@@ -132,12 +152,45 @@ int main(int argc, const char* argv[])
 			{
 				break;
 			}
-			if (ALLEGRO_EVENT_KEY_DOWN == event.type &&
-					ALLEGRO_KEY_F9 == event.keyboard.keycode)
+
+			if (ALLEGRO_EVENT_KEY_DOWN == event.type)
 			{
-				show_bodies = !show_bodies;
+				if (ALLEGRO_KEY_F9 == event.keyboard.keycode)
+				{
+					show_bodies = !show_bodies;
+				}
+
+				if (ALLEGRO_KEY_F12 == event.keyboard.keycode)
+				{
+					show_console = !show_console;
+				}
 			}
-			player.Event(event);
+			if(!show_console)
+			{
+				player.Event(event);
+			}
+			else
+			{
+				//Input for console and call lua
+				if(event.type == ALLEGRO_EVENT_KEY_DOWN || event.type == ALLEGRO_EVENT_KEY_REPEAT)
+				{
+					if(event.keyboard.keycode == ALLEGRO_KEY_BACKSPACE)
+					{
+						int pos = al_ustr_offset(console_input, -1);
+						al_ustr_remove_chr(console_input, pos);
+					}
+					else if(event.keyboard.keycode == ALLEGRO_KEY_ENTER
+						||  event.keyboard.keycode == ALLEGRO_KEY_PAD_ENTER)
+					{
+						script_manager.Run_string(al_cstr(console_input));
+						al_ustr_assign_cstr(console_input, "");
+					}
+					else
+					{
+						al_ustr_append_chr(console_input, event.keyboard.unichar);
+					}
+				}
+			}
 		}
 
 		acctime += dt;
@@ -166,6 +219,13 @@ int main(int argc, const char* argv[])
 			{
 				Draw_body(body, camera);
 			}
+		}
+
+		if(show_console)
+		{
+			ALLEGRO_COLOR color = al_map_rgb_f(1, 1, 1);
+			al_draw_filled_rectangle(0, 10, 800, 30, al_map_rgb_f(0.1, 0.1, 0.1));
+			al_draw_text(font, color, 10, 10, 0, al_cstr(console_input)) ;
 		}
 
 		al_flip_display();
