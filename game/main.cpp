@@ -110,15 +110,13 @@ int main(int argc, const char* argv[])
 	if(argc==2)
 	{
 		Load(argv[1], &platforms, &bitmaps, &sprites);
-		for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
-			(*i)->Create_body(world);
 	}
 	else
 	{
 		Load("data/test.map", &platforms, &bitmaps, &sprites);
-		for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
-			(*i)->Create_body(world);
 	}
+	for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
+		(*i)->Create_body(world);
 	
 	ContactListener cl;
 	world.SetContactListener(&cl);
