@@ -103,6 +103,7 @@ int main(int argc, const char* argv[])
 
 	Player player;
 	player.Create_body(&world);
+	script_manager.Set_player(&player);
 
 	Platforms platforms;
 	Bitmaps bitmaps;
