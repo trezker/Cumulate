@@ -4,7 +4,6 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_ttf.h>
 
-
 World::World()
 {
 	b2Vec2 gravity(0.0f, 40.0f);
@@ -20,6 +19,13 @@ World::World()
 	show_console = false;
 	font = al_load_ttf_font("data/times.ttf", 12, 0);
 	console_input = al_ustr_new("");
+	
+	Entity* entity = new Entity();
+	Bitmap* entimage = new Bitmap("data/enemy.png");
+	entity->Set_image(entimage);
+	entity->Create_body(world);
+	entity->Set_position(0, -10);
+	entities.push_back(entity);
 }
 
 World::~World()
@@ -84,6 +90,9 @@ void World::Draw()
 	for(Sprites::iterator i = sprites.begin(); i != sprites.end(); ++i)
 		(*i)->Draw(Vector2(camera.x, camera.y));
 
+	for(Entities::iterator i = entities.begin(); i!= entities.end(); ++i)
+		(*i)->Draw(camera);
+	
 	player.Draw(camera);
 
 	if(show_bodies)

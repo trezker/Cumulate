@@ -113,6 +113,12 @@ void Player::Update(float dt)
 		{
 			touching_ground = true;
 			contact_normal += contactedge->contact->GetManifold()->localNormal;
+			if(contactedge->contact->GetManifold()->type == b2Manifold::e_circles)
+			{
+				b2Vec2 n = body->GetPosition() - contactedge->other->GetPosition();
+				n.Normalize();
+				contact_normal += n;
+			}
 			contacts ++;
 		}
 		contactedge = contactedge->next;
@@ -123,6 +129,8 @@ void Player::Update(float dt)
 	//Jumping
 	if(jump && touching_ground)
 	{
+		std::cout<<"Contacts: "<<contacts<<std::endl;
+		std::cout<<"Normal: "<<contact_normal.x<<", "<<contact_normal.y<<std::endl;
 		jump = false;
 		v += 15*contact_normal;
 	}

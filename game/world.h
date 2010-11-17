@@ -10,6 +10,7 @@
 #include "script_manager.h"
 #include <sinxml/sinxml.h>
 #include "contactlistener.h"
+#include "entity.h"
 
 typedef std::vector<Platform*> Platforms;
 
@@ -32,6 +33,7 @@ private:
 	Platforms platforms;
 	Bitmaps bitmaps;
 	Sprites sprites;
+	Entities entities;
 	Script_manager script_manager;
 	b2Vec2 camera;
 	bool show_bodies;
