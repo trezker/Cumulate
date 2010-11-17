@@ -7,6 +7,14 @@ Entity::Entity()
 {
 }
 
+Entity::~Entity()
+{
+	if(body)
+	{
+		body->GetWorld()->DestroyBody(body);
+	}
+}
+
 void Entity::Set_image(Bitmap* i)
 {
 	image = i;
@@ -14,6 +22,10 @@ void Entity::Set_image(Bitmap* i)
 
 void Entity::Create_body(b2World* world)
 {
+	if(body)
+	{
+		body->GetWorld()->DestroyBody(body);
+	}
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.fixedRotation = true;

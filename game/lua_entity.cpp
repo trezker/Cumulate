@@ -43,6 +43,8 @@ static int entity_create_body(lua_State *L)
 	Entity* entity = check_entity(L, 1);
 	World* world = check_world(L, 2);
 	entity->Create_body(world->Get_b2world());
+	world->Add_entity(entity);
+	//Make gc, remove from world.
 	return 0;
 }
 
@@ -74,14 +76,28 @@ static const luaL_reg entity_methods[] = {
 
 // Meta
 
-static int static_model_tostring (lua_State *L)
+static int entity_tostring (lua_State *L)
 {
 	lua_pushfstring(L, "entity: %p", lua_touserdata(L, 1));
 	return 1;
 }
 
+static int entity_gc (lua_State *L)
+{
+	Lua_entity** pi = (Lua_entity**)luaL_checkudata(L, 1, PLAYER_STRING);
+	Entity* entity = (*pi)->entity;
+	lua_getglobal(L, "world");
+	World* world = check_world(L, -1);
+	world->Remove_entity(entity);
+	lua_pop(L, 1);
+	delete entity;
+	delete *pi;
+	return 0;
+}
+
 static const luaL_reg entity_meta[] = {
-	{"__tostring", static_model_tostring},
+	{"__gc",       entity_gc},
+	{"__tostring", entity_tostring},
 	{0, 0}
 };
 

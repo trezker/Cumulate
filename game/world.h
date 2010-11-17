@@ -27,6 +27,8 @@ public:
 	void Draw();
 	
 	void Load(const char* filename);
+	void Add_entity(Entity* e);
+	void Remove_entity(Entity* e);
 	
 	b2World *Get_b2world();
 private:

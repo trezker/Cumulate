@@ -3,6 +3,7 @@
 #include <map>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_ttf.h>
+#include <algorithm>
 
 World::World()
 {
@@ -173,4 +174,14 @@ void World::Load(const char* filename)
 b2World* World::Get_b2world()
 {
 	return world;
+}
+
+void World::Add_entity(Entity* e)
+{
+	entities.push_back(e);
+}
+
+void World::Remove_entity(Entity* e)
+{
+	entities.erase(std::find(entities.begin(), entities.end(), e));
 }

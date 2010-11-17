@@ -71,12 +71,10 @@ static const luaL_reg world_meta[] = {
 
 int register_world (lua_State *L)
 {
-	std::cout<<"1"<<std::endl;
 	lua_newtable (L);
 	luaL_register(L, NULL, world_methods);  /* create methods table,
 												add it to the globals */
 
-	std::cout<<"1"<<std::endl;
 	luaL_newmetatable(L, PLAYER_STRING);        /* create metatable for Image,
 										 add it to the Lua registry */
 	luaL_register(L, 0, world_meta);  /* fill metatable */
@@ -88,10 +86,8 @@ int register_world (lua_State *L)
 	lua_rawset(L, -3);                  /* hide metatable:
 										 metatable.__metatable = methods */
 	lua_pop(L, 1);                      /* drop metatable */
-	std::cout<<"1"<<std::endl;
 
 	lua_setfield(L, -2, PLAYER_STRING);
 
-	std::cout<<"1"<<std::endl;
 	return 0;                           /* return methods on the stack */
 }

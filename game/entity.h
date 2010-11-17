@@ -9,6 +9,7 @@ class Entity
 {
 public:
 	Entity();
+	~Entity();
 	void Set_image(Bitmap* i);
 	void Create_body(b2World* world);
 	void Set_position(float x, float y);
