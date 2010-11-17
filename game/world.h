@@ -27,6 +27,8 @@ public:
 	void Draw();
 	
 	void Load(const char* filename);
+	
+	b2World *Get_b2world();
 private:
 	b2World *world;
 	Player player;

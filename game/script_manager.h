@@ -8,6 +8,7 @@ extern "C" {
 }
 
 class Player;
+class World;
 
 class Script_manager
 {
@@ -17,6 +18,7 @@ public:
 	void Run_string(const char* s);
 	
 	void Set_player(Player* player);
+	void Set_world(World* world);
 private:
 	lua_State* state;
 };

@@ -11,6 +11,7 @@ World::World()
 
 	player.Create_body(world);
 	script_manager.Set_player(&player);
+	script_manager.Set_world(this);
 
 	world->SetContactListener(&cl);
 	
@@ -167,4 +168,9 @@ void World::Load(const char* filename)
 
 	for(Platforms::iterator i = platforms.begin(); i!=platforms.end(); ++i)
 		(*i)->Create_body(*world);
+}
+
+b2World* World::Get_b2world()
+{
+	return world;
 }
