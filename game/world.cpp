@@ -183,5 +183,7 @@ void World::Add_entity(Entity* e)
 
 void World::Remove_entity(Entity* e)
 {
-	entities.erase(std::find(entities.begin(), entities.end(), e));
+	Entities::iterator i = std::find(entities.begin(), entities.end(), e);
+	if(i!=entities.end())
+		entities.erase(i);
 }
