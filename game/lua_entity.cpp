@@ -41,10 +41,11 @@ static int entity_new(lua_State *L)
 static int entity_create_body(lua_State *L)
 {
 	Entity* entity = check_entity(L, 1);
-	World* world = check_world(L, 2);
+	lua_getglobal(L, "world");
+	World* world = check_world(L, -1);
 	entity->Create_body(world->Get_b2world());
 	world->Add_entity(entity);
-	//Make gc, remove from world.
+	lua_pop(L, 1);
 	return 0;
 }
 
