@@ -22,10 +22,7 @@ void Entity::Set_image(Bitmap* i)
 
 void Entity::Create_body(b2World* world)
 {
-	if(body)
-	{
-		body->GetWorld()->DestroyBody(body);
-	}
+	Destroy_body();
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.fixedRotation = true;
@@ -39,6 +36,14 @@ void Entity::Create_body(b2World* world)
 	fixtureDef.friction = 1.0f;
 	fixtureDef.restitution = 0.1f;
 	body->CreateFixture(&fixtureDef);
+}
+
+void Entity::Destroy_body()
+{
+	if(body)
+	{
+		body->GetWorld()->DestroyBody(body);
+	}
 }
 
 void Entity::Set_position(float x, float y)

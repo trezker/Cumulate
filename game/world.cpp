@@ -178,6 +178,9 @@ b2World* World::Get_b2world()
 
 void World::Add_entity(Entity* e)
 {
+	Entities::iterator i = std::find(entities.begin(), entities.end(), e);
+	if(i!=entities.end())
+		return;
 	entities.push_back(e);
 }
 

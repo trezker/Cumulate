@@ -49,6 +49,17 @@ static int entity_create_body(lua_State *L)
 	return 0;
 }
 
+static int entity_destroy_body(lua_State *L)
+{
+	Entity* entity = check_entity(L, 1);
+	entity->Destroy_body();
+	lua_getglobal(L, "world");
+	World* world = check_world(L, -1);
+	world->Remove_entity(entity);
+	lua_pop(L, 1);
+	return 0;
+}
+
 static int entity_set_position(lua_State *L)
 {
 	Entity* entity = check_entity(L, 1);
@@ -72,6 +83,7 @@ static const luaL_reg entity_methods[] = {
 	{"set_position", entity_set_position},
 	{"new", entity_new},
 	{"create_body", entity_create_body},
+	{"destroy_body", entity_destroy_body},
 	{0,0}
 };
 

@@ -12,6 +12,7 @@ public:
 	~Entity();
 	void Set_image(Bitmap* i);
 	void Create_body(b2World* world);
+	void Destroy_body();
 	void Set_position(float x, float y);
 	b2Vec2 Get_position();
 	void Update(float dt);
