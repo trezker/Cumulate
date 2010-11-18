@@ -78,12 +78,25 @@ static int entity_get_position(lua_State *L)
 	return 2;
 }
 
+static int entity_set_image(lua_State *L)
+{
+	Entity* entity = check_entity(L, 1);
+	const char* filename = luaL_checkstring(L, 2);
+	lua_getglobal(L, "world");
+	World* world = check_world(L, -1);
+	Bitmap* image = world->Get_image(filename);
+	lua_pop(L, 1);
+	entity->Set_image(image);
+	return 0;
+}
+
 static const luaL_reg entity_methods[] = {
 	{"get_position", entity_get_position},
 	{"set_position", entity_set_position},
 	{"new", entity_new},
 	{"create_body", entity_create_body},
 	{"destroy_body", entity_destroy_body},
+	{"set_image", entity_set_image},
 	{0,0}
 };
 

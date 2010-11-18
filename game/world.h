@@ -11,8 +11,10 @@
 #include <sinxml/sinxml.h>
 #include "contactlistener.h"
 #include "entity.h"
+#include <map>
 
 typedef std::vector<Platform*> Platforms;
+typedef std::map<std::string, Bitmap*> Imagemap;
 
 class b2World;
 
@@ -27,6 +29,7 @@ public:
 	void Draw();
 	
 	void Load(const char* filename);
+	Bitmap* Get_image(const std::string& filename);
 	void Add_entity(Entity* e);
 	void Remove_entity(Entity* e);
 	
@@ -37,6 +40,7 @@ private:
 	Platforms platforms;
 	Bitmaps bitmaps;
 	Sprites sprites;
+	Imagemap images;
 	Entities entities;
 	Script_manager script_manager;
 	b2Vec2 camera;

@@ -171,6 +171,15 @@ void World::Load(const char* filename)
 		(*i)->Create_body(*world);
 }
 
+Bitmap* World::Get_image(const std::string& filename)
+{
+	if(images[filename] == NULL)
+	{
+		images[filename] = new Bitmap(filename);
+	}
+	return images[filename];
+}
+
 b2World* World::Get_b2world()
 {
 	return world;
