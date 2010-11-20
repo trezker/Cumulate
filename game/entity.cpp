@@ -56,6 +56,16 @@ b2Vec2 Entity::Get_position()
 	return body->GetPosition();
 }
 
+b2Vec2 Entity::Get_linear_velocity()
+{
+	return body->GetLinearVelocity();
+}
+
+void Entity::Set_linear_velocity(b2Vec2 v)
+{
+	body->SetLinearVelocity(v);
+}
+
 void Entity::Update(float dt)
 {
 }

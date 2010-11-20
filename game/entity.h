@@ -15,6 +15,8 @@ public:
 	void Destroy_body();
 	void Set_position(float x, float y);
 	b2Vec2 Get_position();
+	b2Vec2 Get_linear_velocity();
+	void Set_linear_velocity(b2Vec2 v);
 	void Update(float dt);
 	void Draw(b2Vec2 camera);
 private:

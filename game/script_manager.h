@@ -16,7 +16,7 @@ public:
 	Script_manager();
 	~Script_manager();
 	void Run_string(const char* s);
-	
+
 	void Set_player(Player* player);
 	void Set_world(World* world);
 private:

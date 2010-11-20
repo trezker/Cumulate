@@ -78,6 +78,24 @@ static int entity_get_position(lua_State *L)
 	return 2;
 }
 
+static int entity_set_linear_velocity(lua_State *L)
+{
+	Entity* entity = check_entity(L, 1);
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
+	entity->Set_linear_velocity(b2Vec2(x, y));
+	return 0;
+}
+
+static int entity_get_linear_velocity(lua_State *L)
+{
+	Entity* entity = check_entity(L, 1);
+	b2Vec2 p = entity->Get_linear_velocity();
+	lua_pushnumber(L, p.x);
+	lua_pushnumber(L, p.y);
+	return 2;
+}
+
 static int entity_set_image(lua_State *L)
 {
 	Entity* entity = check_entity(L, 1);
@@ -93,6 +111,8 @@ static int entity_set_image(lua_State *L)
 static const luaL_reg entity_methods[] = {
 	{"get_position", entity_get_position},
 	{"set_position", entity_set_position},
+	{"get_linear_velocity", entity_get_linear_velocity},
+	{"set_linear_velocity", entity_set_linear_velocity},
 	{"new", entity_new},
 	{"create_body", entity_create_body},
 	{"destroy_body", entity_destroy_body},
