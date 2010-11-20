@@ -12,6 +12,7 @@
 #include "contactlistener.h"
 #include "entity.h"
 #include <map>
+#include <deque>
 
 typedef std::vector<Platform*> Platforms;
 typedef std::map<std::string, Bitmap*> Imagemap;
@@ -49,6 +50,10 @@ private:
 	bool show_console;
 	ALLEGRO_FONT* font;
 	ALLEGRO_USTR* console_input;
+	ALLEGRO_USTR* console_stash;
+	typedef std::deque<ALLEGRO_USTR*> Console_history;
+	Console_history console_history;
+	int console_lookup;
 };
 
 #endif

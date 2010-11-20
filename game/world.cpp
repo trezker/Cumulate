@@ -4,6 +4,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_ttf.h>
 #include <algorithm>
+#include <iostream>
 
 World::World()
 {
@@ -21,7 +22,9 @@ World::World()
 	show_console = false;
 	font = al_load_ttf_font("data/times.ttf", 12, 0);
 	console_input = al_ustr_new("");
-	
+	console_stash = al_ustr_new("");
+	console_lookup = -1;
+
 	Entity* entity = new Entity();
 	Bitmap* entimage = new Bitmap("data/enemy.png");
 	entity->Set_image(entimage);
@@ -62,11 +65,36 @@ void World::Event(ALLEGRO_EVENT& event)
 				int pos = al_ustr_offset(console_input, -1);
 				al_ustr_remove_chr(console_input, pos);
 			}
+			else if(event.keyboard.keycode == ALLEGRO_KEY_UP)
+			{
+				if(console_lookup < int(console_history.size())-1)
+				{
+					if(console_lookup == -1)
+						al_ustr_assign(console_stash, console_input);
+					++console_lookup;
+					al_ustr_assign(console_input, console_history[console_lookup]);
+				}
+			}
+			else if(event.keyboard.keycode == ALLEGRO_KEY_DOWN)
+			{
+				if(console_lookup > 0)
+				{
+					--console_lookup;
+					al_ustr_assign(console_input, console_history[console_lookup]);
+				}
+				else if(console_lookup == 0)
+				{
+					--console_lookup;
+					al_ustr_assign(console_input, console_stash);
+				}
+			}
 			else if(event.keyboard.keycode == ALLEGRO_KEY_ENTER
 				||  event.keyboard.keycode == ALLEGRO_KEY_PAD_ENTER)
 			{
+				console_history.push_front(console_input);
 				script_manager.Run_string(al_cstr(console_input));
-				al_ustr_assign_cstr(console_input, "");
+				console_input = al_ustr_new("");
+				console_lookup = -1;
 			}
 			else
 			{
