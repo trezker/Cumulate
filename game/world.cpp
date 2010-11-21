@@ -5,6 +5,7 @@
 #include <allegro5/allegro_ttf.h>
 #include <algorithm>
 #include <iostream>
+#include "lua_entity.h"
 
 World::World()
 {
@@ -30,6 +31,7 @@ World::World()
 	entity->Set_image(entimage);
 	entity->Create_body(world);
 	entity->Set_position(0, -10);
+	entity->Set_script_reference(script_manager.Get_script("data/zombie.lua"));
 	entities.push_back(entity);
 }
 
@@ -107,6 +109,17 @@ void World::Event(ALLEGRO_EVENT& event)
 void World::Update(float dt)
 {
 	player.Update(dt);
+	
+	for(Entities::iterator i = entities.begin(); i!= entities.end(); ++i)
+	{
+		if(script_manager.Push_callback("update", (*i)->Get_script_reference()))
+		{
+			script_manager.Push_number(dt);
+			push_entity(script_manager.Get_state(), *i);
+			script_manager.Call(2);
+		}
+	}
+	
 	world->Step(dt, 6, 2);
 	world->ClearForces();
 

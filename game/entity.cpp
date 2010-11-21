@@ -1,9 +1,15 @@
 #include "entity.h"
 #include <iostream>
+extern "C" {
+#include <lua5.1/lua.h>
+#include <lua5.1/lualib.h>
+#include <lua5.1/lauxlib.h>
+}
 
 Entity::Entity()
 :body(NULL)
 ,image(NULL)
+,script_reference(LUA_NOREF)
 {
 }
 
@@ -76,4 +82,14 @@ void Entity::Draw(b2Vec2 camera)
 		return;
 	b2Vec2 p = 10*body->GetPosition()-camera;
 	image->Draw(p.x-image->Get_width()/2, p.y-image->Get_height()/2);
+}
+
+void Entity::Set_script_reference(int r)
+{
+	script_reference = r;
+}
+
+int Entity::Get_script_reference()
+{
+	return script_reference;
 }

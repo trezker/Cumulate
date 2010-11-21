@@ -18,6 +18,10 @@ Entity* check_entity (lua_State *L, int index)
 	pi = (Lua_entity**)luaL_checkudata(L, index, PLAYER_STRING);
 	if (*pi == NULL)
 		luaL_typerror(L, index, PLAYER_STRING);
+	if ((*pi)->entity == NULL)
+	{
+		luaL_argerror (L, index, "invalid entity");
+	}
 	return (*pi)->entity;
 }
 
@@ -35,6 +39,19 @@ Lua_entity *push_entity (lua_State *L, Entity* im)
 static int entity_new(lua_State *L)
 {
 	push_entity(L, new Entity);
+	return 1;
+}
+
+static int entity_delete(lua_State *L)
+{
+	Entity* entity = check_entity(L, 1);
+	lua_getglobal(L, "world");
+	World* world = check_world(L, -1);
+	world->Remove_entity(entity);
+	lua_pop(L, 1);
+	delete entity;
+	Lua_entity** pi = (Lua_entity**)luaL_checkudata(L, 1, PLAYER_STRING);
+	(*pi)->entity = NULL;
 	return 1;
 }
 
@@ -114,6 +131,7 @@ static const luaL_reg entity_methods[] = {
 	{"get_linear_velocity", entity_get_linear_velocity},
 	{"set_linear_velocity", entity_set_linear_velocity},
 	{"new", entity_new},
+	{"delete", entity_delete},
 	{"create_body", entity_create_body},
 	{"destroy_body", entity_destroy_body},
 	{"set_image", entity_set_image},
@@ -131,13 +149,13 @@ static int entity_tostring (lua_State *L)
 static int entity_gc (lua_State *L)
 {
 	Lua_entity** pi = (Lua_entity**)luaL_checkudata(L, 1, PLAYER_STRING);
-	Entity* entity = (*pi)->entity;
+/*	Entity* entity = (*pi)->entity;
 	lua_getglobal(L, "world");
 	World* world = check_world(L, -1);
 	world->Remove_entity(entity);
 	lua_pop(L, 1);
 	delete entity;
-	delete *pi;
+*/	delete *pi;
 	return 0;
 }
 

@@ -19,9 +19,12 @@ public:
 	void Set_linear_velocity(b2Vec2 v);
 	void Update(float dt);
 	void Draw(b2Vec2 camera);
+	void Set_script_reference(int r);
+	int Get_script_reference();
 private:
 	b2Body* body;
 	Bitmap* image;
+	int script_reference;
 };
 
 typedef std::vector<Entity*> Entities;
