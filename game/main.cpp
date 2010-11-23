@@ -21,6 +21,7 @@ int main(int argc, const char* argv[])
 	al_init_image_addon();
 	al_init_font_addon();
 	al_init_ttf_addon();
+	al_init_primitives_addon();
 
 	ALLEGRO_DISPLAY *display;
 	al_set_new_display_flags(ALLEGRO_WINDOWED);
