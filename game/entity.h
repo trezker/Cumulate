@@ -17,6 +17,8 @@ public:
 	b2Vec2 Get_position();
 	b2Vec2 Get_linear_velocity();
 	void Set_linear_velocity(b2Vec2 v);
+	void Set_angular_velocity(float v);
+	void Set_fixed_rotation(bool t);
 	void Update(float dt);
 	void Draw(b2Vec2 camera);
 	void Set_script_reference(int r);

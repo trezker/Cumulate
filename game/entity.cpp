@@ -72,6 +72,16 @@ void Entity::Set_linear_velocity(b2Vec2 v)
 	body->SetLinearVelocity(v);
 }
 
+void Entity::Set_angular_velocity(float v)
+{
+	body->SetAngularVelocity(v);
+}
+
+void Entity::Set_fixed_rotation(bool t)
+{
+	body->SetFixedRotation(t);
+}
+
 void Entity::Update(float dt)
 {
 }
