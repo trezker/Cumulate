@@ -125,6 +125,18 @@ static int entity_set_image(lua_State *L)
 	return 0;
 }
 
+static int entity_set_script(lua_State *L)
+{
+	Entity* entity = check_entity(L, 1);
+	const char* filename = luaL_checkstring(L, 2);
+	lua_getglobal(L, "world");
+	World* world = check_world(L, -1);
+	int script = world->Get_script(filename);
+	lua_pop(L, 1);
+	entity->Set_script_reference(script);
+	return 0;
+}
+
 static const luaL_reg entity_methods[] = {
 	{"get_position", entity_get_position},
 	{"set_position", entity_set_position},
@@ -135,6 +147,7 @@ static const luaL_reg entity_methods[] = {
 	{"create_body", entity_create_body},
 	{"destroy_body", entity_destroy_body},
 	{"set_image", entity_set_image},
+	{"set_script", entity_set_script},
 	{0,0}
 };
 

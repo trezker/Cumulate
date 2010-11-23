@@ -22,7 +22,7 @@ public:
 	void Set_player(Player* player);
 	void Set_world(World* world);
 	int Get_script(const std::string& filename);
-	
+
 	bool Push_callback(const char* c, int ref);
 	void Push_number(float n);
 	lua_State* Get_state();

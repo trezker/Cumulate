@@ -35,6 +35,7 @@ public:
 	void Remove_entity(Entity* e);
 	
 	b2World *Get_b2world();
+	int Get_script(const std::string& filename);
 private:
 	b2World *world;
 	Player player;

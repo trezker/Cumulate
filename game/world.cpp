@@ -240,3 +240,8 @@ void World::Remove_entity(Entity* e)
 	if(i!=entities.end())
 		entities.erase(i);
 }
+
+int World::Get_script(const std::string& filename)
+{
+	return script_manager.Get_script(filename);
+}
