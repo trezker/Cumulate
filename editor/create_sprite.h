@@ -28,8 +28,10 @@ private:
 	int selected;
 	Inputbox inputbox;
 	Button loadbutton;
+	Button choosebutton;
 	bool open;
 	Thumbnail_list thumbnail_list;
+	ALLEGRO_PATH *datapath;
 };
 
 #endif

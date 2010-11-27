@@ -1,5 +1,6 @@
 #include "create_sprite.h"
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_native_dialog.h>
 #include <iostream>
 
 Create_sprite::Create_sprite(Bitmaps& ibitmaps, Sprites& isprites, Vector2& icamera, ALLEGRO_FONT* ifont)
@@ -17,6 +18,8 @@ Create_sprite::Create_sprite(Bitmaps& ibitmaps, Sprites& isprites, Vector2& icam
 	inputbox.Set_text("filename");
 	loadbutton.Set_font(font);
 	loadbutton.Set_text("Load");
+	choosebutton.Set_font(font);
+	choosebutton.Set_text("Choose file");
 	if(!bitmaps->empty())
 	{
 		sprite = new Sprite((*bitmaps)[0]);
@@ -25,6 +28,7 @@ Create_sprite::Create_sprite(Bitmaps& ibitmaps, Sprites& isprites, Vector2& icam
 	{
 		thumbnail_list.Add_thumbnail(*i);
 	}
+	datapath = al_create_path("data/");
 }
 
 Create_sprite::~Create_sprite()
@@ -42,6 +46,7 @@ void Create_sprite::Draw()
 	{
 		inputbox.Draw();
 		loadbutton.Draw();
+		choosebutton.Draw();
 		thumbnail_list.Draw();
 		if(sprite)
 		{
@@ -83,6 +88,7 @@ void Create_sprite::Event(ALLEGRO_EVENT& event)
 	
 	inputbox.Event(event);
 	loadbutton.Event(event);
+	choosebutton.Event(event);
 	thumbnail_list.Event(event);
 
 	if(loadbutton.Get_active())
@@ -104,7 +110,47 @@ void Create_sprite::Event(ALLEGRO_EVENT& event)
 			}
 		}
 	}
-	
+
+	if(choosebutton.Get_active())
+	{
+		choosebutton.Set_active(false);
+
+		ALLEGRO_FILECHOOSER *filechooser = al_create_native_file_dialog(datapath, "Load", "*.*", ALLEGRO_FILECHOOSER_MULTIPLE|ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
+		al_show_native_file_dialog(NULL, filechooser);
+		int nf = al_get_native_file_dialog_count(filechooser);
+		for(int i = 0; i<nf; ++i)
+		{
+			const ALLEGRO_PATH *path = al_get_native_file_dialog_path(filechooser, i);
+
+			ALLEGRO_PATH *relpath = al_clone_path(path);
+			while(std::string("data") != al_get_path_component(relpath, 0) && al_get_path_num_components(relpath)>1)
+				al_remove_path_component(relpath, 0);
+			if(al_get_path_num_components(relpath)<1)
+				continue;
+
+			const char *p = al_path_cstr(relpath, '/');
+
+			if(!al_filename_exists(p))
+				al_show_native_message_box(NULL, "Bad path", "Not in data", "You must only select files that exist in the games data folder.", NULL, ALLEGRO_MESSAGEBOX_ERROR);
+
+			Bitmap* bitmap = new Bitmap(p);
+			if(!bitmap->Get_allegro_bitmap())
+				delete bitmap;
+			else
+			{
+				std::cout<<p<<std::endl;
+				char *cwd = al_get_current_directory();
+				bitmaps->push_back(bitmap);
+				thumbnail_list.Add_thumbnail(bitmap);
+				if(!sprite)
+					sprite = new Sprite(bitmap);
+			}
+			al_destroy_path(relpath);
+		}
+		al_destroy_native_file_dialog(filechooser);
+		std::cout<<"Woop"<<std::endl;
+	}
+
 	if(thumbnail_list.Get_changed())
 	{
 		thumbnail_list.Set_changed(false);
@@ -119,9 +165,11 @@ void Create_sprite::Open()
 {
 	inputbox.Set_position(x, y+h);
 	inputbox.Set_size(100, h);
-	loadbutton.Set_position(x+100, y+h);
+	loadbutton.Set_position(x, y+h*2);
 	loadbutton.Set_size(50, h);
-	thumbnail_list.Set_position(x, y+h*2);
+	choosebutton.Set_position(x+50, y+h*2);
+	choosebutton.Set_size(100, h);
+	thumbnail_list.Set_position(x, y+h*3);
 	thumbnail_list.Set_size(150, 200);
 	h = h*2+200;
 	w = 150;
