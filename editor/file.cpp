@@ -20,6 +20,7 @@ open(false)
 	savebutton.Set_text("Save");
 	loadbutton.Set_font(font);
 	loadbutton.Set_text("Load");
+	datapath = al_create_path("data/");
 }
 
 File::~File()
@@ -113,10 +114,26 @@ void File::Event(ALLEGRO_EVENT& event)
 	{
 		loadbutton.Set_active(false);
 
-		if(!al_ustr_equal(inputbox.Get_text(), al_ustr_empty_string()))
+/*		if(!al_ustr_equal(inputbox.Get_text(), al_ustr_empty_string()))
 		{
 			std::cout<<"Load"<<std::endl;
 			Load(al_cstr(inputbox.Get_text()));
+		}
+*/
+		ALLEGRO_FILECHOOSER *filechooser = al_create_native_file_dialog(datapath, "Load", "*.*", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
+		al_show_native_file_dialog(NULL, filechooser);
+		int nf = al_get_native_file_dialog_count(filechooser);
+		for(int i = 0; i<nf; ++i)
+		{
+			const ALLEGRO_PATH *path = al_get_native_file_dialog_path(filechooser, i);
+
+			ALLEGRO_PATH *relpath = Get_relative_path(path);
+			if(!relpath)
+				continue;
+
+			const char *p = al_path_cstr(relpath, '/');
+			Load(p);
+			al_destroy_native_file_dialog(filechooser);
 		}
 	}
 }

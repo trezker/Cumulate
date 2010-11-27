@@ -122,17 +122,11 @@ void Create_sprite::Event(ALLEGRO_EVENT& event)
 		{
 			const ALLEGRO_PATH *path = al_get_native_file_dialog_path(filechooser, i);
 
-			ALLEGRO_PATH *relpath = al_clone_path(path);
-			while(std::string("data") != al_get_path_component(relpath, 0) && al_get_path_num_components(relpath)>1)
-				al_remove_path_component(relpath, 0);
-			if(al_get_path_num_components(relpath)<1)
+			ALLEGRO_PATH *relpath = Get_relative_path(path);
+			if(!relpath)
 				continue;
 
 			const char *p = al_path_cstr(relpath, '/');
-
-			if(!al_filename_exists(p))
-				al_show_native_message_box(NULL, "Bad path", "Not in data", "You must only select files that exist in the games data folder.", NULL, ALLEGRO_MESSAGEBOX_ERROR);
-
 			Bitmap* bitmap = new Bitmap(p);
 			if(!bitmap->Get_allegro_bitmap())
 				delete bitmap;

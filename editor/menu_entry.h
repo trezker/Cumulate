@@ -22,4 +22,6 @@ public:
 	bool resized;
 };
 
+ALLEGRO_PATH *Get_relative_path(const ALLEGRO_PATH* abspath);
+
 #endif

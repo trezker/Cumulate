@@ -29,6 +29,7 @@ private:
 	Inputbox inputbox;
 	Button savebutton;
 	Button loadbutton;
+	ALLEGRO_PATH *datapath;
 	bool open;
 };
 

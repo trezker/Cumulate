@@ -38,13 +38,14 @@ solution ("Cumulate")
 		language "C++"
 		location "build/editor"
 		files { "editor/*.cpp" }
-		links ( {"allegro", "allegro_image", "allegro_primitives", "allegro_font", "allegro_ttf", "allegro_dialog", "sinxml", "common"} )
 		includedirs { "common" }
 
 		configuration "Debug"
 			defines { "DEBUG" }
 			flags { "Symbols" }
+			links ( {"allegro-debug", "allegro_image-debug", "allegro_primitives-debug", "allegro_font-debug", "allegro_ttf-debug", "allegro_dialog-debug", "sinxml", "common"} )
  
 		configuration "Release"
 			defines { "NDEBUG" }
 			flags { "Optimize" }
+			links ( {"allegro", "allegro_image", "allegro_primitives", "allegro_font", "allegro_ttf", "allegro_dialog", "sinxml", "common"} )
