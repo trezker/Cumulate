@@ -133,8 +133,9 @@ void File::Event(ALLEGRO_EVENT& event)
 
 			const char *p = al_path_cstr(relpath, '/');
 			Load(p);
-			al_destroy_native_file_dialog(filechooser);
+			al_destroy_path(relpath);
 		}
+		al_destroy_native_file_dialog(filechooser);
 	}
 }
 
